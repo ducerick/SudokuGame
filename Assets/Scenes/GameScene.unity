@@ -710,6 +710,7 @@ MonoBehaviour:
   GridSquare: {fileID: 5893244403973640966, guid: 1dec37cf217d6d645a9d20f1f9641dd6, type: 3}
   StartPosition: {x: -435, y: 442}
   SquareScale: 0.9
+  HighlightColor: {r: 0.57079923, g: 0.83233356, b: 0.9528302, a: 1}
   SquareSpan: 5
 --- !u!222 &359020071
 CanvasRenderer:
@@ -2662,6 +2663,7 @@ GameObject:
   - component: {fileID: 1340481064}
   - component: {fileID: 1340481067}
   - component: {fileID: 1340481069}
+  - component: {fileID: 1340481070}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2778,6 +2780,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9b71fa74e64cef14b926cfb7e6b628a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1340481070
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1340481063}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0549611bd4fc7884b9f49e2ec2697828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1442753644

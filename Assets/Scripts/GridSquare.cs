@@ -14,6 +14,9 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     private bool _selected = false;
     private int _correctNumber = -1;
     private bool _enableChange = true;
+
+    public bool HasWrongNumber { get; private set; } = false;
+
     void Start()
     {
         
@@ -97,13 +100,25 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
                 color.normalColor = Color.red;
                 this.colors = color;
                 GameEvents.Instance.WrongNumberMethod();
+                HasWrongNumber = true;
             }
             else {
                 var color = this.colors;
                 color.normalColor = Color.white;
                 this.colors = color;
+                HasWrongNumber = false;
             }
         }
 
     }
+
+    public void SetColorSquare(Color col)
+    {
+        var color = this.colors;
+        color.normalColor = col;
+        this.colors = color;
+    }
+
+    public bool IsSelected() => _selected;
+
 }

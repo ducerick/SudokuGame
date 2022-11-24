@@ -6,7 +6,7 @@ using System.Linq;
 
 public class SudokuEasyData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\BuiMinhDucIntern\SodukuGame\SodukuGame\Assets\Graphics\SudokuData\Easy.txt";
+    public static readonly string TextFile = @"C:\Unity\SudokuGame\Assets\Graphics\SudokuData\Easy.txt";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -23,7 +23,7 @@ public class SudokuEasyData : MonoBehaviour
 
 public class SudokuMediumData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\BuiMinhDucIntern\SodukuGame\SodukuGame\Assets\Graphics\SudokuData\Medium.txt";
+    public static readonly string TextFile = @"C:\Unity\SudokuGame\Assets\Graphics\SudokuData\Medium.txt";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -40,7 +40,7 @@ public class SudokuMediumData : MonoBehaviour
 
 public class SudokuHardData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\BuiMinhDucIntern\SodukuGame\SodukuGame\Assets\Graphics\SudokuData\Hard.txt";
+    public static readonly string TextFile = @"C:\Unity\SudokuGame\Assets\Graphics\SudokuData\Hard.txt";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -57,7 +57,7 @@ public class SudokuHardData : MonoBehaviour
 
 public class SudokuVeryHardData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\BuiMinhDucIntern\SodukuGame\SodukuGame\Assets\Graphics\SudokuData\VeryHard.txt";
+    public static readonly string TextFile = @"C:\Unity\SudokuGame\Assets\Graphics\SudokuData\VeryHard.txt";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
