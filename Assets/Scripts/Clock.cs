@@ -25,6 +25,15 @@ public class Clock : MonoBehaviour
 
         _textClock = GetComponent<Text>();
         _deltaTime = 0;
+
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            _deltaTime = Config.ReadGameTime();
+        }
+        else
+        {
+            _deltaTime = 0;
+        }
     }
 
     // Start is called before the first frame update
@@ -36,7 +45,19 @@ public class Clock : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!_stopClock)
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            float delta_time = Config.ReadGameTime();
+            delta_time += Time.deltaTime;
+            TimeSpan span = TimeSpan.FromSeconds(delta_time);
+
+            string hour = LeadingZero(span.Hours);
+            string minute = LeadingZero(span.Minutes);
+            string seconds = LeadingZero(span.Seconds);
+
+            _textClock.text = hour + ":" + minute + ":" + seconds;
+        }
+        if (!_stopClock && Lives.Instance.GetError() < 3)
         {
             _deltaTime += Time.deltaTime;
             TimeSpan span = TimeSpan.FromSeconds(_deltaTime);
@@ -83,4 +104,13 @@ public class Clock : MonoBehaviour
        _stopClock = false;
     }
 
+    public static string GetCurrentTimeString()
+    {
+        return Instance._deltaTime.ToString();
+    }
+
+    private string LeadingZero(int n)
+    {
+        return n.ToString().PadLeft(2, '0');
+    }
 }

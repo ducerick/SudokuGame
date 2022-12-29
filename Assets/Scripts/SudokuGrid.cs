@@ -23,13 +23,59 @@ public class SudokuGrid : MonoBehaviour
             Debug.LogError("This Game Object need to have GridSquare script attached!");
         }
         CreateGrid();
-        SetGridNumber(GameSettings.Instance.GetGameMode());
+
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            SetGridFromFile();
+        }
+        else if (GameSettings.Instance.GetLoadHistory1()) {
+            Config.SetPath(History.hs1);
+            SetGridFromFile();
+        }
+        else if (GameSettings.Instance.GetLoadHistory2())
+        {
+            Config.SetPath(History.hs2);
+            SetGridFromFile();
+        }
+        else if (GameSettings.Instance.GetLoadHistory3())
+        {
+            Config.SetPath(History.hs3);
+            SetGridFromFile();
+        }
+        else if (GameSettings.Instance.GetLoadHistory4())
+        {
+            Config.SetPath(History.hs4);
+            SetGridFromFile();
+        }
+        else if (GameSettings.Instance.GetLoadHistory5())
+        {
+            Config.SetPath(History.hs5);
+            SetGridFromFile();
+        }
+        else
+        {
+            SetGridNumber(GameSettings.Instance.GetGameMode());
+        }
+
     }
 
-    // Update is called once per frame
-    void Update()
+    private void SetGridFromFile()
     {
+        string level = GameSettings.Instance.GetGameMode();
+        _slectedData = Config.ReadGameBoardLevel();
+        var data = Config.ReadGridData();
 
+        SetGridSquareData(data);
+        SetGridNotes(Config.GetGridNotes());
+    }
+
+    private void SetGridNotes(Dictionary<int, List<int>> notes)
+    {
+        foreach(var note in notes)
+        {
+            GridSquares[note.Key].GetComponent<GridSquare>().SetGridNotes(note.Value);
+
+        }
     }
 
     private void CreateGrid()
@@ -95,16 +141,11 @@ public class SudokuGrid : MonoBehaviour
 
             square.GetComponent<RectTransform>().anchoredPosition = new Vector2(StartPosition.x + posXOffset, StartPosition.y - posYoffet);
             columnNumber++;
-            Debug.Log(rowNumber);
         }
     }
 
     private void SetGridNumber(string level)
     {
-        //foreach (GameObject square in GridSquares)
-        //{
-        //    square.GetComponent<GridSquare>().SetNumber(Random.Range(1, 10));
-        //}
         _slectedData = Random.Range(0, SudokuData.Instance.SudokuGame[level].Count);
         SudokuData.SudokuBoardData data = SudokuData.Instance.SudokuGame[level][_slectedData];
         SetGridSquareData(data);
@@ -112,9 +153,9 @@ public class SudokuGrid : MonoBehaviour
 
     private void SetGridSquareData(SudokuData.SudokuBoardData data)
     {
-        for(int index = 0; index < GridSquares.Count; index++)
+        for (int index = 0; index < GridSquares.Count; index++)
         {
-            if(data.UnsolvedData[index] > 0)
+            if (data.UnsolvedData[index] > 0)
             {
                 GridSquares[index].GetComponent<GridSquare>().SetEnableChange(false);
             }
@@ -131,14 +172,44 @@ public class SudokuGrid : MonoBehaviour
     private void OnDisable()
     {
         GameEvents.Instance.OnSquareSelected -= OnSquareSelected;
+
+        var solved_data = SudokuData.Instance.SudokuGame[GameSettings.Instance.GetGameMode()][_slectedData].SolvedData;
+        int[] unsolved_data = new int[81];
+        Dictionary<string, List<string>> grid_notes = new Dictionary<string, List<string>>();
+
+        for (int i = 0; i < GridSquares.Count; i++)
+        {
+            var comp = GridSquares[i].GetComponent<GridSquare>();
+            unsolved_data[i] = comp.GetSquareNumber();
+            string key = "square_note:" + i.ToString();
+            grid_notes.Add(key, comp.GetSquareNotes());
+        }
+
+        SudokuData.SudokuBoardData current_game_data = new SudokuData.SudokuBoardData(unsolved_data, solved_data);
+
+        if(GameSettings.Instance.GetExitAffterWon() == false) // donot save data when exit after completed board
+        {
+            Config.SaveBoardData(current_game_data, GameSettings.Instance.GetGameMode(), _slectedData, Lives.Instance.GetErrorNumbers(), grid_notes, GameScore.Instance.GetScore());
+        }
+        else
+        {
+            Config.DeleteDataFile();
+        }
+
+        if(Lives.Instance.GetError() == 3)
+        {
+            History.SetUpFile();
+            Config.SetPath(History.hs1);
+            Config.SaveBoardData(current_game_data, GameSettings.Instance.GetGameMode(), _slectedData, Lives.Instance.GetErrorNumbers(), grid_notes, GameScore.Instance.GetScore());
+        }
     }
 
-    private void SetColorSquare(int [] data, Color col)
+    private void SetColorSquare(int[] data, Color col)
     {
-        foreach(var dt in data)
+        foreach (var dt in data)
         {
             var tmp = GridSquares[dt].GetComponent<GridSquare>();
-            if (tmp.IsSelected() == false || data.Length == 81 )
+            if (tmp.IsSelected() == false || data.Length == 81)
             {
                 if (tmp.HasWrongNumber == false)
                     tmp.SetColorSquare(col);

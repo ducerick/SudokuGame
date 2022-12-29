@@ -14,23 +14,36 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     private bool _selected = false;
     private int _correctNumber = -1;
     private bool _enableChange = true;
-
     public bool HasWrongNumber { get; private set; } = false;
+    public List<GameObject> NumberNotes;
+    private bool _noteActive;
+    private bool _questionActive;
 
     void Start()
     {
-        
+        _noteActive = false;
+        _questionActive = false;
+
+        if (GameSettings.Instance.GetContinuePreviousGame() == false)
+        {
+            DeActiveNumber();
+        } else
+        {
+            OnClearNumber();
+        }
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void DisplayText()
     {
-        if(_number <= 0)
+        if (_number <= 0)
         {
             NumberText.GetComponent<Text>().text = " ";
         }
@@ -54,6 +67,12 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public void SetCorrectNumber(int number)
     {
         _correctNumber = number;
+
+        if (_number != 0 && _number != _correctNumber)
+        {
+            HasWrongNumber = true;
+            SetColorSquare(Color.red);
+        }
     }
 
     public void SetEnableChange(bool enable)
@@ -65,6 +84,10 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         _selected = true;
         GameEvents.Instance.SquareSelectedMethod(_squareIndex);
+        if (_questionActive)
+        {
+            GameEvents.Instance.OnShowMessageMethod(_correctNumber);
+        }
     }
 
     public void OnSubmit(BaseEventData eventData)
@@ -76,37 +99,58 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         GameEvents.Instance.OnUpdateSquareNumber += OnSetNumber;
         GameEvents.Instance.OnSquareSelected += OnSquareSelected;
+        GameEvents.Instance.OnNotesActive += OnNotesActive;
+        GameEvents.Instance.OnClearNumber += OnClearNumber;
+        GameEvents.Instance.OnQuestionActive += OnQuestionActive;
     }
 
     private void OnDisable()
     {
         GameEvents.Instance.OnUpdateSquareNumber -= OnSetNumber;
         GameEvents.Instance.OnSquareSelected -= OnSquareSelected;
+        GameEvents.Instance.OnNotesActive -= OnNotesActive;
+        GameEvents.Instance.OnClearNumber -= OnClearNumber;
+        GameEvents.Instance.OnQuestionActive -= OnQuestionActive;
+
     }
 
     private void OnSquareSelected(int squareIndex)
     {
-        if (_squareIndex != squareIndex) _selected = false;
+        if (_squareIndex != squareIndex)
+        {
+            _selected = false;
+            _questionActive = false;
+            GameEvents.Instance.OnShowMessageMethod(-1);
+        }
     }
 
     private void OnSetNumber(int number)
     {
-        if (_selected && _enableChange)
+        if (_selected && _enableChange && Lives.Instance.GetError() < 3)
         {
-            SetNumber(number);
-            if(_correctNumber != number)
+            if (_noteActive == true && HasWrongNumber == false)
             {
-                var color = this.colors;
-                color.normalColor = Color.red;
-                this.colors = color;
-                GameEvents.Instance.WrongNumberMethod();
-                HasWrongNumber = true;
+                SetSingleNoteValue(number);
             }
-            else {
-                var color = this.colors;
-                color.normalColor = Color.white;
-                this.colors = color;
-                HasWrongNumber = false;
+            else if (_noteActive == false)
+            {
+                DeActiveNumber();
+                SetNumber(number);
+                if (_correctNumber != number)
+                {
+                    var color = this.colors;
+                    color.normalColor = Color.red;
+                    this.colors = color;
+                    GameEvents.Instance.WrongNumberMethod();
+                    HasWrongNumber = true;
+                }
+                else
+                {
+                    SetColorSquare(Color.green);
+                    HasWrongNumber = false;
+                    _enableChange = false;
+                    GameScore.Instance.SetSocre(1);
+                }
             }
         }
 
@@ -121,4 +165,80 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
 
     public bool IsSelected() => _selected;
 
+    public void SetSingleNoteValue(int value)
+    {
+        foreach (var number in NumberNotes)
+        {
+            if (number.GetComponent<Text>().text == value.ToString())
+            {
+                number.SetActive(true);
+            }
+        }
+    }
+
+    public void SetGridNotes(List<int> notes)
+    {
+        foreach (var number in NumberNotes)
+        {
+            if (notes.Contains(int.Parse(number.GetComponent<Text>().text)))
+            {
+                number.SetActive(true);
+            }
+            else
+            {
+                number.SetActive(false);
+            }
+        }
+    }
+
+    public List<string> GetSquareNotes()
+    {
+        List<string> list = new List<string>();
+        foreach (var number in NumberNotes)
+        {
+            if (number.activeSelf)
+            {
+                list.Add(number.GetComponent<Text>().text);
+            }
+        }
+
+        return list;
+    }
+
+    public int GetSquareNumber()
+    {
+        return _number;
+    }
+
+
+    private void OnNotesActive(bool active)
+    {
+        _noteActive = active;
+    }
+
+    private void DeActiveNumber()
+    {
+        foreach (var number in NumberNotes)
+        {
+            number.SetActive(false);
+        }
+    }
+
+
+    private void OnClearNumber()
+    {
+        if (_selected && _enableChange)
+        {
+            _number = 0;
+            HasWrongNumber = false;
+            SetColorSquare(Color.white);
+            DisplayText();
+            DeActiveNumber();
+        }
+    }
+
+    private void OnQuestionActive(bool active)
+    {
+        _questionActive = active;
+    }
 }

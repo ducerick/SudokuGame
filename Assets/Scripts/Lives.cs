@@ -10,11 +10,39 @@ public class Lives : MonoBehaviour
     private int _lives = 0;
     [SerializeField] GameObject GameOverPopup;
 
+    public static Lives Instance;
+
+    public int GetError() => _errorNumber;
+
+    private void Awake()
+    {
+        if (Instance == null) Instance = this;
+        else Destroy(this);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         _lives = ErrorImage.Count;
         _errorNumber = 0;
+
+        if (GameSettings.Instance.GetContinuePreviousGame())
+        {
+            _errorNumber = Config.ErrorNumber();
+            _lives = ErrorImage.Count - _errorNumber;
+
+            for (int error = 0; error < _errorNumber; error++)
+            {
+                ErrorImage[error].SetActive(true);
+            }
+        }
+        if (GameSettings.Instance.GetLoadHistory1() || GameSettings.Instance.GetLoadHistory2() || GameSettings.Instance.GetLoadHistory3() || GameSettings.Instance.GetLoadHistory4() || GameSettings.Instance.GetLoadHistory5())
+        {
+            for (int error = 0; error < ErrorImage.Count; error++)
+            {
+                ErrorImage[error].SetActive(true);
+            }
+        }
     }
 
     // Update is called once per frame
@@ -52,4 +80,6 @@ public class Lives : MonoBehaviour
             GameOverPopup.SetActive(true);
         }
     }
+
+    public int GetErrorNumbers() => _errorNumber;
 }
