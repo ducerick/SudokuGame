@@ -6,12 +6,22 @@ using System.Linq;
 
 public class SudokuEasyData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\InternUnity\SudokuGame\Assets\Graphics\SudokuData\Easy.txt";
+
+
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private static string dir = Application.persistentDataPath;
+#endif
+
+#if UNITY_EDITOR
+    private static string dir = Directory.GetCurrentDirectory();
+#endif
+
+    public static readonly string TextFile = dir + @"/Assets/Graphics/SudokuData/Easy.ini";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
         string[] lines = File.ReadAllLines(TextFile);
-        for(int index = 0; index < lines.Length; index += 2)
+        for (int index = 0; index < lines.Length; index += 2)
         {
             int[] unsolved = lines[index].Select(ch => ch - '0').ToArray();
             int[] solved = lines[index + 1].Select(ch => ch - '0').ToArray();
@@ -23,7 +33,15 @@ public class SudokuEasyData : MonoBehaviour
 
 public class SudokuMediumData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\InternUnity\SudokuGame\Assets\Graphics\SudokuData\Medium.txt";
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private static string dir = Application.persistentDataPath;
+#endif
+
+#if UNITY_EDITOR
+    private static string dir = Directory.GetCurrentDirectory();
+#endif
+
+    public static readonly string TextFile = dir + @"/Assets/Graphics/SudokuData/Medium.ini";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -40,7 +58,14 @@ public class SudokuMediumData : MonoBehaviour
 
 public class SudokuHardData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\InternUnity\SudokuGame\Assets\Graphics\SudokuData\Hard.txt";
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private static string dir = Application.persistentDataPath;
+#endif
+
+#if UNITY_EDITOR
+    private static string dir = Directory.GetCurrentDirectory();
+#endif
+    public static readonly string TextFile = dir + @"/Assets/Graphics/SudokuData/Hard.ini";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -57,7 +82,14 @@ public class SudokuHardData : MonoBehaviour
 
 public class SudokuVeryHardData : MonoBehaviour
 {
-    public static readonly string TextFile = @"D:\InternUnity\SudokuGame\Assets\Graphics\SudokuData\VeryHard.txt";
+#if UNITY_ANDROID && !UNITY_EDITOR
+    private static string dir = Application.persistentDataPath;
+#endif
+
+#if UNITY_EDITOR
+    private static string dir = Directory.GetCurrentDirectory();
+#endif
+    public static readonly string TextFile = dir + @"/Assets/Graphics/SudokuData/VeryHard.ini";
     public static List<SudokuData.SudokuBoardData> GetData()
     {
         List<SudokuData.SudokuBoardData> data = new List<SudokuData.SudokuBoardData>();
@@ -80,7 +112,7 @@ public class SudokuData : MonoBehaviour
         public int[] UnsolvedData;
         public int[] SolvedData;
 
-        public SudokuBoardData(int[] unsolved, int[] solved) 
+        public SudokuBoardData(int[] unsolved, int[] solved)
         {
             UnsolvedData = unsolved;
             SolvedData = solved;
@@ -107,6 +139,6 @@ public class SudokuData : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

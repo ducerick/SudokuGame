@@ -12,8 +12,6 @@ public class GameOverMenu : MonoBehaviour
     void Start()
     {
         TimeText.text = Clock.Instance.GetCurrentTime().text;
-
-
     }
 
     // Update is called once per frame

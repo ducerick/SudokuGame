@@ -8,11 +8,14 @@ public class Config : MonoBehaviour
 {
 #if UNITY_ANDROID && !UNITY_EDITOR
     private static string dir = Application.persistentDataPath;
-#else
+#endif
+
+#if UNITY_EDITOR
     private static string dir = Directory.GetCurrentDirectory();
 #endif
 
-    private static string file = @"\board_data.ini";
+
+    private static string file = @"/board_data.ini";
     private static string path = dir + file;
 
     public static void SetPath(string _file) => path = dir + _file;
@@ -37,12 +40,12 @@ public class Config : MonoBehaviour
         string solved_string = "#solved:";
         string score_string = "#score:" + score.ToString();
 
-        foreach(var unsolved_data in boardData.UnsolvedData)
+        foreach (var unsolved_data in boardData.UnsolvedData)
         {
             unsolved_string += unsolved_data.ToString() + ",";
         }
 
-        foreach(var solved_data in boardData.SolvedData)
+        foreach (var solved_data in boardData.SolvedData)
         {
             solved_string += solved_data.ToString() + ",";
         }
@@ -87,15 +90,15 @@ public class Config : MonoBehaviour
         while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#square_note")
+            if (word[0] == "#square_note")
             {
                 int square_index = -1;
                 List<int> notes = new List<int>();
                 int.TryParse(word[1], out square_index);
 
                 string[] substring = Regex.Split(word[2], ",");
-                
-                foreach(var note in substring)
+
+                foreach (var note in substring)
                 {
                     int note_number = -1;
                     int.TryParse(note, out note_number);
@@ -120,10 +123,10 @@ public class Config : MonoBehaviour
         string level = "";
         StreamReader file = new StreamReader(path);
 
-        while((line = file.ReadLine()) != null)
+        while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#level")
+            if (word[0] == "#level")
             {
                 level = word[1];
             }
@@ -144,14 +147,14 @@ public class Config : MonoBehaviour
         int unsolved_index = 0;
         int solved_index = 0;
 
-        while((line = file.ReadLine()) != null)
+        while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#unsolved")
+            if (word[0] == "#unsolved")
             {
                 string[] substrings = Regex.Split(word[1], ",");
 
-                foreach(var value in substrings)
+                foreach (var value in substrings)
                 {
                     int square_number = -1;
                     if (int.TryParse(value, out square_number))
@@ -189,10 +192,10 @@ public class Config : MonoBehaviour
         string line;
         StreamReader file = new StreamReader(path);
 
-        while((line = file.ReadLine()) != null)
+        while ((line = file.ReadLine()) != null)
         {
             string[] word = line.Split(':');
-            if(word[0] == "#board_index")
+            if (word[0] == "#board_index")
             {
                 int.TryParse(word[1], out level);
             }
@@ -260,5 +263,5 @@ public class Config : MonoBehaviour
         file.Close();
         return errors;
     }
-   
+
 }

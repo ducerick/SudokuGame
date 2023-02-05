@@ -136,7 +136,6 @@ public class SudokuGrid : MonoBehaviour
                 rowNext = false;
                 squareSpanCount.y++;
                 posYoffet += SquareSpan;
-                Debug.Log(squareSpanCount.y);
             }
 
             square.GetComponent<RectTransform>().anchoredPosition = new Vector2(StartPosition.x + posXOffset, StartPosition.y - posYoffet);
@@ -167,11 +166,14 @@ public class SudokuGrid : MonoBehaviour
     private void OnEnable()
     {
         GameEvents.Instance.OnSquareSelected += OnSquareSelected;
+        GameEvents.Instance.OnUpdateSquareNumber += CheckBoardCompleted;
     }
 
     private void OnDisable()
     {
         GameEvents.Instance.OnSquareSelected -= OnSquareSelected;
+        GameEvents.Instance.OnUpdateSquareNumber -= CheckBoardCompleted;
+
 
         var solved_data = SudokuData.Instance.SudokuGame[GameSettings.Instance.GetGameMode()][_slectedData].SolvedData;
         int[] unsolved_data = new int[81];
@@ -228,5 +230,31 @@ public class SudokuGrid : MonoBehaviour
         SetColorSquare(horizontalLine, HighlightColor);
         SetColorSquare(verticalLine, HighlightColor);
         SetColorSquare(squaresLine, HighlightColor);
+    }
+
+    private void CheckBoardCompleted(int number)
+    {
+        foreach(var square in GridSquares)
+        {
+            var comp = square.GetComponent<GridSquare>();
+            if (comp.IsCorrectNumberSet() == false)
+            {
+                return;
+            }
+
+        }
+
+        GameEvents.Instance.OnBoardCompletedMethod();
+    }
+
+    public void SolveSudoku()
+    {
+        foreach(var square in GridSquares)
+        {
+            var comp = square.GetComponent<GridSquare>();
+            comp.SetCorrectNumber();
+        }
+
+        CheckBoardCompleted(0);
     }
 }

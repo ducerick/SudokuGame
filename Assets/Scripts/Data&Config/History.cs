@@ -7,23 +7,19 @@ public class History : MonoBehaviour
 {
 #if UNITY_ANDROID && !UNITY_EDITOR
     private static string dir = Application.persistentDataPath;
-#else
+#endif
+
+#if UNITY_EDITOR
     private static string dir = Directory.GetCurrentDirectory();
 #endif
 
-    public static string hs1 = @"\hs1.ini";
-    public static string hs2 = @"\hs2.ini";
-    public static string hs3 = @"\hs3.ini";
-    public static string hs4 = @"\hs4.ini";
-    public static string hs5 = @"\hs5.ini";
+    public static string hs1 = @"/hs1.ini";
+    public static string hs2 = @"/hs2.ini";
+    public static string hs3 = @"/hs3.ini";
+    public static string hs4 = @"/hs4.ini";
+    public static string hs5 = @"/hs5.ini";
 
     public List<GameObject> list = new List<GameObject>();
-
-    // Start is called before the first frame update
-    void Start()
-    {
-
-    }
 
     // Update is called once per frame
     void Update()

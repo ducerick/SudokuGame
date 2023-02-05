@@ -18,6 +18,7 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     public List<GameObject> NumberNotes;
     private bool _noteActive;
     private bool _questionActive;
+    public bool IsCorrectNumberSet() => _number == _correctNumber;
 
     void Start()
     {
@@ -31,14 +32,6 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
         {
             OnClearNumber();
         }
-
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
     }
 
     public void DisplayText()
@@ -73,6 +66,13 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
             HasWrongNumber = true;
             SetColorSquare(Color.red);
         }
+    }
+
+    public void SetCorrectNumber()
+    {
+        _number = _correctNumber;
+        SetSingleNoteValue(0);
+        DisplayText();
     }
 
     public void SetEnableChange(bool enable)
@@ -241,4 +241,6 @@ public class GridSquare : Selectable, IPointerClickHandler, ISubmitHandler, IPoi
     {
         _questionActive = active;
     }
+
+
 }

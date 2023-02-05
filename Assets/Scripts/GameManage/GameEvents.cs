@@ -4,18 +4,6 @@ using UnityEngine;
 
 public class GameEvents : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public static GameEvents Instance;
 
     private void Awake()
@@ -114,6 +102,17 @@ public class GameEvents : MonoBehaviour
         if (OnQuestionActive != null)
         {
             OnQuestionActive(active);
+        }
+    }
+
+    public delegate void BoardCompleted();
+    public event BoardCompleted OnBoardCompleted;
+
+    public void OnBoardCompletedMethod()
+    {
+        if(OnBoardCompleted != null)
+        {
+            OnBoardCompleted();
         }
     }
 

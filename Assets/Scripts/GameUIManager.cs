@@ -41,7 +41,8 @@ public class GameUIManager : MonoBehaviour
 
     public void OnConnect()
     {
-        networkManager.Connect();
+        if (onMultiplayerMode)
+            networkManager.Connect();
     }
 
     public void OnEasyMode()
