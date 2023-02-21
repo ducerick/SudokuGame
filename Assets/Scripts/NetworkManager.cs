@@ -4,12 +4,14 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class NetworkManager : MonoBehaviourPunCallbacks
 {
 	private const string LEVEL = "level";
 	private const byte MAX_PLAYERS = 2;
-	[SerializeField] private GameUIManager uiManager;
+	[SerializeField] private Text connectionStatusText;
+	[SerializeField] private GameInitializer gameInitializer;
 	//[SerializeField] private GameInitializer gameInitializer;
 	//private MultiplayerChessGameController chessGameController;
 
@@ -18,6 +20,9 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	void Awake()
 	{
 		PhotonNetwork.AutomaticallySyncScene = true;
+		if(GameMode.Instance.GetGameState() == State.MULTI) connectionStatusText.gameObject.SetActive(true);
+		else connectionStatusText.gameObject.SetActive(false);
+		playerLevel = GameSettings.Instance.GameMode();
 	}
 
 	//public void SetDependencies(MultiplayerChessGameController chessGameController)
@@ -40,7 +45,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	private void Update()
 	{
-		uiManager.SetConnectionStatusText(PhotonNetwork.NetworkClientState.ToString());
+		SetConnectionStatusText(PhotonNetwork.NetworkClientState.ToString());
 	}
 
 	#region Photon Callbacks
@@ -55,7 +60,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 
 	public override void OnJoinRandomFailed(short returnCode, string message)
 	{
-		Debug.LogError($"Joining random room failed becuse of {message}. Creating new one with player level {playerLevel}");
+		Debug.LogError($"Joining random room failed becuse of {message}. Creating new one with player level {playerLevel}");	
 		PhotonNetwork.CreateRoom(null, new RoomOptions
 		{
 			CustomRoomPropertiesForLobby = new string[] { LEVEL },
@@ -71,7 +76,7 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 		//gameInitializer.CreateMultiplayerBoard();
 		PrepareTeamSelectionOptions();
 		//uiManager.ShowTeamSelectionScreen();
-
+		gameInitializer.CreateMultiplayerBoard();
 	}
 
 
@@ -91,18 +96,24 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		Debug.LogError($"Player {newPlayer.ActorNumber} entered a room");
+		connectionStatusText.gameObject.SetActive(false);
+		gameInitializer.InitializeMultiplayerController();
 	}
 	#endregion
 
 	public void SetPlayerLevel(GameSettings.EGameMode level)
 	{
-		playerLevel = level;
 		PhotonNetwork.LocalPlayer.SetCustomProperties(new ExitGames.Client.Photon.Hashtable() { { LEVEL, level } });
 	}
 
 	internal bool IsRoomFull()
 	{
 		return PhotonNetwork.CurrentRoom.PlayerCount == PhotonNetwork.CurrentRoom.MaxPlayers;
+	}
+
+	public void SetConnectionStatusText(string text)
+	{
+		connectionStatusText.text = text;
 	}
 
 }

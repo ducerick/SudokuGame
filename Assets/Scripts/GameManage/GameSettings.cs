@@ -28,6 +28,7 @@ public class GameSettings : MonoBehaviour
     {
         if (Instance == null) Instance = this;
         else Destroy(this);
+        //DontDestroyOnLoad(this.gameObject);
     }
 
     private void Start()
@@ -60,6 +61,11 @@ public class GameSettings : MonoBehaviour
         }
         Debug.LogError("ERROR: Game Level is not set!");
         return "";
+    }
+
+    public EGameMode GameMode()
+    {
+        return _gameMode;
     }
 
     public void SetExitAffterWon(bool set)

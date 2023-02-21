@@ -5,15 +5,10 @@ using UnityEngine.SceneManagement;
 
 public class MenuButtons : MonoBehaviour
 {
-    IEnumerator LoadSceneMode(string name)
-    {
-        if (GameUIManager.onMultiplayerMode)
-            yield return new WaitForSeconds(10f);
-        SceneManager.LoadScene(name);
-    }
     public void LoadScene(string name)
     {
-        StartCoroutine(LoadSceneMode(name));
+        SceneManager.LoadScene(name);
+        GameSettings.Instance.SetContinuePreviousGame(false);
     }
 
     public void LoadEasyGame(string name)
@@ -55,8 +50,8 @@ public class MenuButtons : MonoBehaviour
 
     }
 
-    public void ContinuePreviousGame(bool continue_game)
+    public void ContinuePreviousGame()
     {
-        GameSettings.Instance.SetContinuePreviousGame(continue_game);
+        GameSettings.Instance.SetContinuePreviousGame(true);
     }
 }

@@ -13,11 +13,11 @@ public class History : MonoBehaviour
     private static string dir = Directory.GetCurrentDirectory();
 #endif
 
-    public static string hs1 = @"/hs1.ini";
-    public static string hs2 = @"/hs2.ini";
-    public static string hs3 = @"/hs3.ini";
-    public static string hs4 = @"/hs4.ini";
-    public static string hs5 = @"/hs5.ini";
+    public static string hs1 = "hs1.txt";
+    public static string hs2 = "hs2.txt";
+    public static string hs3 = "hs3.txt";
+    public static string hs4 = "hs4.txt";
+    public static string hs5 = "hs5.txt";
 
     public List<GameObject> list = new List<GameObject>();
 

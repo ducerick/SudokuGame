@@ -6,16 +6,19 @@ using System.Text.RegularExpressions;
 
 public class Config : MonoBehaviour
 {
-#if UNITY_ANDROID && !UNITY_EDITOR
-    private static string dir = Application.persistentDataPath;
-#endif
+    private static string dir;
+    private void Awake()
+    {
+        #if UNITY_ANDROID && !UNITY_EDITOR
+    dir = Application.persistentDataPath;
+    #endif
 
-#if UNITY_EDITOR
-    private static string dir = Directory.GetCurrentDirectory();
-#endif
+    #if UNITY_EDITOR
+        dir = Directory.GetCurrentDirectory();
+    #endif
+}
 
-
-    private static string file = @"/board_data.ini";
+    private static string file = "/Assets/Resources/board_data.txt";
     private static string path = dir + file;
 
     public static void SetPath(string _file) => path = dir + _file;
@@ -84,12 +87,14 @@ public class Config : MonoBehaviour
     public static Dictionary<int, List<int>> GetGridNotes()
     {
         Dictionary<int, List<int>> grid_notes = new Dictionary<int, List<int>>();
-        string line;
-        StreamReader file = new StreamReader(path);
 
-        while ((line = file.ReadLine()) != null)
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
+
+        for(int index = 0; index < lines.Length -1; index ++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#square_note")
             {
                 int square_index = -1;
@@ -111,35 +116,33 @@ public class Config : MonoBehaviour
             }
         }
 
-        file.Close();
-
         return grid_notes;
 
     }
 
     public static string ReadBoradLevel()
     {
-        string line;
         string level = "";
-        StreamReader file = new StreamReader(path);
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#level")
             {
                 level = word[1];
             }
         }
-
-        file.Close();
         return level;
     }
 
     public static SudokuData.SudokuBoardData ReadGridData()
     {
-        string line;
-        StreamReader file = new StreamReader(path);
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
         int[] unsolved_data = new int[81];
         int[] solved_data = new int[81];
@@ -147,9 +150,9 @@ public class Config : MonoBehaviour
         int unsolved_index = 0;
         int solved_index = 0;
 
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#unsolved")
             {
                 string[] substrings = Regex.Split(word[1], ",");
@@ -181,86 +184,78 @@ public class Config : MonoBehaviour
             }
 
         }
-
-        file.Close();
         return new SudokuData.SudokuBoardData(unsolved_data, solved_data);
     }
 
     public static int ReadGameBoardLevel()
     {
         int level = -1;
-        string line;
-        StreamReader file = new StreamReader(path);
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#board_index")
             {
                 int.TryParse(word[1], out level);
             }
         }
-
-        file.Close();
         return level;
     }
 
     public static int ReadGameScore()
     {
         int score = -1;
-        string line;
-        StreamReader file = new StreamReader(path);
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#board_index")
             {
                 int.TryParse(word[1], out score);
             }
         }
-
-        file.Close();
         return score;
     }
 
     public static float ReadGameTime()
     {
         float time = -1f;
-        string line;
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
-        StreamReader file = new StreamReader(path);
-
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#time")
             {
                 float.TryParse(word[1], out time);
             }
         }
-
-        file.Close();
         return time;
     }
 
     public static int ErrorNumber()
     {
         int errors = 0;
-        string line;
+        var rawData = Resources.Load<TextAsset>("board_data");
+        string str = rawData.text;
+        string[] lines = str.Split("\r\n");
 
-        StreamReader file = new StreamReader(path);
-
-        while ((line = file.ReadLine()) != null)
+        for (int index = 0; index < lines.Length - 1; index++)
         {
-            string[] word = line.Split(':');
+            string[] word = lines[index].Split(':');
             if (word[0] == "#errors")
             {
                 int.TryParse(word[1], out errors);
             }
         }
-
-        file.Close();
         return errors;
     }
 
