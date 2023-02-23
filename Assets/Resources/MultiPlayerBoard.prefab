@@ -8,7 +8,7 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 8629288362649472090}
+  - component: {fileID: 6959517913252226491}
   - component: {fileID: 7629245538534227546}
   - component: {fileID: 7351203939690894144}
   m_Layer: 5
@@ -18,26 +18,21 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &8629288362649472090
-RectTransform:
+--- !u!4 &6959517913252226491
+Transform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6642307575720943039}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -3, y: 3.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -3, y: 3.6}
-  m_SizeDelta: {x: 100, y: 100}
-  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &7629245538534227546
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,12 +49,11 @@ MonoBehaviour:
   Rows: 9
   SquareOffset: 2.5
   GridSquare: {fileID: 5893244403973640966, guid: 1dec37cf217d6d645a9d20f1f9641dd6, type: 3}
-  StartPosition: {x: -435, y: 432}
+  StartPosition: {x: -430, y: 435}
   SquareScale: 0.9
-  _slectedData: -1
+  _slectedData: 9
   HighlightColor: {r: 1, g: 0, b: 0, a: 1}
   SquareSpan: 0
-  networkManager: {fileID: 2440724105917305198, guid: 2de48721d24f90b4996bfb2498a68774, type: 3}
 --- !u!114 &7351203939690894144
 MonoBehaviour:
   m_ObjectHideFlags: 0

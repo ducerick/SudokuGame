@@ -12,6 +12,22 @@ public class GameInitializer : MonoBehaviour
     [SerializeField] private Transform boardAnchor;
 
 
+    private int _selectedData;
+
+    public void SetSelectedData(int value)
+    {
+        if (networkManager.photonView.IsMine)
+        {
+            _selectedData = value;
+        }
+    }
+
+    private void Start()
+    {
+        
+    }
+
+
     private void Awake()
     {
         if (GameMode.Instance.GetGameState() == State.SINGLE)
@@ -25,12 +41,19 @@ public class GameInitializer : MonoBehaviour
         }
     }
 
-    public void CreateMultiplayerBoard()
+    public PhotonView CreateMultiplayerBoard()
     {
-        if (!networkManager.IsRoomFull())
+        GameObject mulPrefab = PhotonNetwork.Instantiate(multiPlayerBoardPrefab.name, boardAnchor.position, boardAnchor.rotation);
+        mulPrefab.transform.SetParent(boardAnchor);
+        mulPrefab.transform.localScale = Vector3.one;
+        PhotonView photonView = mulPrefab.GetComponent<PhotonView>();
+        if (photonView == null)
         {
-            PhotonNetwork.Instantiate(multiPlayerBoardPrefab.name, boardAnchor.localPosition, boardAnchor.localRotation);
+            photonView = mulPrefab.AddComponent<PhotonView>();
         }
+
+        photonView.TransferOwnership(PhotonNetwork.MasterClient);
+        return photonView;
     }
 
     public void CreateSingleplayerBoard()
@@ -41,13 +64,13 @@ public class GameInitializer : MonoBehaviour
     public void InitializeMultiplayerController()
     {
         MultiPlayerBoard board = FindObjectOfType<MultiPlayerBoard>();
-        board.TryToStartThisGame();
+        board.TryToStartThisGame(_selectedData);
     }
 
     public void InitializeSingleplayerController()
     {
         SinglePlayerBoard board = FindObjectOfType<SinglePlayerBoard>();
-        board.TryToStartThisGame();
+        board.TryToStartThisGame(0);
     }
 
 }

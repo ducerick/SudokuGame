@@ -1,6 +1,5 @@
 using Photon.Pun;
 using Photon.Realtime;
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -73,10 +72,16 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public override void OnJoinedRoom()
 	{
 		Debug.LogError($"Player {PhotonNetwork.LocalPlayer.ActorNumber} joined a room with level: {(GameSettings.EGameMode)PhotonNetwork.CurrentRoom.CustomProperties[LEVEL]}");
-		//gameInitializer.CreateMultiplayerBoard();
 		PrepareTeamSelectionOptions();
 		//uiManager.ShowTeamSelectionScreen();
-		gameInitializer.CreateMultiplayerBoard();
+		PhotonView pv =  gameInitializer.CreateMultiplayerBoard();
+		connectionStatusText.gameObject.SetActive(false);
+		if (PhotonNetwork.LocalPlayer.ActorNumber == 2)
+        {
+			int _selectedData = Random.Range(0, SudokuData.Instance.SudokuGame[GameSettings.Instance.GetGameMode()].Count);
+			pv.RPC("SetSelectedData", RpcTarget.All, _selectedData);
+			gameInitializer.InitializeMultiplayerController();
+		} 
 	}
 
 
@@ -96,9 +101,10 @@ public class NetworkManager : MonoBehaviourPunCallbacks
 	public override void OnPlayerEnteredRoom(Player newPlayer)
 	{
 		Debug.LogError($"Player {newPlayer.ActorNumber} entered a room");
-		connectionStatusText.gameObject.SetActive(false);
 		gameInitializer.InitializeMultiplayerController();
+
 	}
+
 	#endregion
 
 	public void SetPlayerLevel(GameSettings.EGameMode level)

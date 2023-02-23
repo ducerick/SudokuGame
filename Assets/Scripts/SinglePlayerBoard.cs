@@ -58,7 +58,7 @@ public class SinglePlayerBoard : SudokuGrid
         }
     }
 
-    public override void SetGridNumber(string level)
+    public override void SetGridNumber(string level, int _dontuse)
     {
         _slectedData = Random.Range(0, SudokuData.Instance.SudokuGame[level].Count);
         SudokuData.SudokuBoardData data = SudokuData.Instance.SudokuGame[level][_slectedData];
@@ -135,9 +135,9 @@ public class SinglePlayerBoard : SudokuGrid
         }
     }
 
-    public override void TryToStartThisGame()
+    public override void TryToStartThisGame(int _selectedData)
     {
        if (!GameSettings.Instance.GetContinuePreviousGame())
-            SetGridNumber(GameSettings.Instance.GetGameMode());
+            SetGridNumber(GameSettings.Instance.GetGameMode(), _selectedData);
     }
 }

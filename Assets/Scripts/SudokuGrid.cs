@@ -91,11 +91,20 @@ public abstract class SudokuGrid : MonoBehaviour
         }
     }
 
-    public abstract void SetGridNumber(string level);
+    public abstract void SetGridNumber(string level, int _selectedData);
     public abstract void OnSquareSelected(int squareIndex);
     public abstract void CheckBoardCompleted(int number);
-    public abstract void TryToStartThisGame();
+    public abstract void TryToStartThisGame(int _selectedData);
 
+    private void OnEnable()
+    {
+        GameEvents.Instance.OnSquareSelected += OnSquareSelected;
+    }
+
+    private void OnDisable()
+    {
+        GameEvents.Instance.OnSquareSelected -= OnSquareSelected;
+    }
 
     public void SetGridSquareData(SudokuData.SudokuBoardData data)
     {

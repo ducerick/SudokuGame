@@ -6,21 +6,22 @@ using Photon.Pun;
 public class MultiPlayerBoard : SudokuGrid
 {
     private PhotonView photonView;
-    [SerializeField] private NetworkManager networkManager;
 
     // Start is called before the first frame update
     protected override void Awake()
     {
         base.Awake();
-        photonView = GetComponent<PhotonView>();
-        networkManager.SetPlayerLevel(GameSettings.Instance.GameMode());
-        networkManager.Connect();
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    public void SetPhotonView(PhotonView pt)
+    {
+        photonView = pt;
     }
 
     public override void CheckBoardCompleted(int number)
@@ -39,16 +40,15 @@ public class MultiPlayerBoard : SudokuGrid
         tmp.SetColorSquare(Color.yellow);
     }
 
-    public override void SetGridNumber(string level)
+    public override void SetGridNumber(string level, int _selectedData)
     {
-        _slectedData = Random.Range(0, SudokuData.Instance.SudokuGame[level].Count);
+        
         SudokuData.SudokuBoardData data = SudokuData.Instance.SudokuGame[level][_slectedData];
         SetGridSquareData(data);
     }
 
-    public override void TryToStartThisGame()
+    public override void TryToStartThisGame(int _selectedData)
     {
-        if(networkManager.IsRoomFull())
-            SetGridNumber(GameSettings.Instance.GetGameMode());
+        SetGridNumber(GameSettings.Instance.GetGameMode(), _selectedData);
     }
 }

@@ -49,5 +49,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: afe4eb9dd896ef84e9cca625734c5ab6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectionStatusText: {fileID: 0}
-  gameInitializer: {fileID: 0}
+  connectionStatusText: {fileID: 478016626404976482, guid: b97603c11ca32814b99af16ca7d94612, type: 3}
+  gameInitializer: {fileID: 721629854821421575, guid: 2fff7fa6fb5488148b31eee2bfa36763, type: 3}

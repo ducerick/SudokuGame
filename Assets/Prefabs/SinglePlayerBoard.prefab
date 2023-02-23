@@ -62,7 +62,7 @@ MonoBehaviour:
   Rows: 9
   SquareOffset: 2.5
   GridSquare: {fileID: 5893244403973640966, guid: 1dec37cf217d6d645a9d20f1f9641dd6, type: 3}
-  StartPosition: {x: -435, y: 442}
+  StartPosition: {x: -430, y: 435}
   SquareScale: 0.9
   _slectedData: -1
   HighlightColor: {r: 0.3433962, g: 0.8694527, b: 1, a: 1}
